@@ -4,18 +4,29 @@ from django.http import HttpResponseRedirect
 from .forms import *
 from django.contrib.auth import authenticate,login
 # Create your views here.
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
     return render(request,'billing/index.html')
 
-def view_profile(request,id):
-    profile=Profile.objects.get(pk=id)
-    return HttpResponseRedirect(reverse('profile'))
+@login_required
+def view_profile(request):
+    return redirect('profile')
 
+@login_required
 def profile(request):
-    return render(request,'billing/profile.html',{
-        'profile':Profile.objects.all()
+    try:
+        # Try to get the profile for the current user
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        # If no profile exists, handle it gracefully (e.g., redirect to a form to create one)
+        return render(request, 'billing/profile.html', {
+            'error': 'No profile exists for the current user. Please create one.'
+        })
+
+    return render(request, 'billing/profile.html', {
+        'profile': profile
     })
 
 def edit(request,id):
@@ -66,6 +77,16 @@ def register_view(request):
             user=form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
+                        # Create and populate the Profile instance
+            Profile.objects.create(
+                user=user,
+                business_title=form.cleaned_data.get('business_title'),
+                business_address=form.cleaned_data.get('business_address'),
+                business_email=form.cleaned_data.get('business_email'),
+                business_phone=form.cleaned_data.get('business_phone'),
+                business_gst=form.cleaned_data.get('business_gst'),
+            )
+
             return redirect('login')
     else:
         form = RegistrationForm()
