@@ -1,12 +1,13 @@
 {% extends 'billing/base.html' %}
 
-{% load static %}
-
 {% block body %}
 <div class="container-fluid">
-    <h1 class="m-4">All Bills</h1>
+    <h1 class="m-4">All Bills and Customer Details</h1>
+
+    <!-- Bills Section -->
     <div class="row">
         <div class="col-12">
+            <h2 class="mt-4">Bills</h2>
             {% if allbill %}
             <div class="card border-light ms-4 me-4 mb-4">
                 <div class="card-header">
@@ -15,13 +16,11 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
-                           
                             <thead>
-                                
                                 <tr>
-                                    <th scope="col">Bill_ID:</th>
-                                    <th scope="col">Bill_Date:</th>
-                                    
+                                    <th scope="col">Bill_ID</th>
+                                    <th scope="col">Bill_Date</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,22 +28,60 @@
                                 <tr>
                                     <td>{{ billing.bill_id }}</td>
                                     <td>{{ billing.bill_date }}</td>
-                                  
                                     <td>
-                                        <a class="btn btn-warning me-1" href="#">
+                                        <a class="btn btn-warning me-1" href="{% url 'edit' bill_id}">
                                             <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
-                          
                         </table>
                     </div>
                 </div>
             </div>
             {% else %}
-            <p class="ms-4">No BILLS found.</p>
+            <p class="ms-4">No Bills Found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Customers Section -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mt-4">Customers</h2>
+            {% if allcustomer %}
+            <div class="card border-light ms-4 me-4 mb-4">
+                <div class="card-header">
+                    <i class="fa-solid fa-list"></i> CUSTOMER DETAILS
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Customer Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Mobile No</th>
+                                    <th scope="col">GST</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for customer in allcustomer %}
+                                <tr>
+                                    <td>{{ customer.customer_name }}</td>
+                                    <td>{{ customer.customer_address }}</td>
+                                    <td>{{ customer.customer_mobileno }}</td>
+                                    <td>{{ customer.customer_gst }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="ms-4">No Customers Found.</p>
             {% endif %}
         </div>
     </div>

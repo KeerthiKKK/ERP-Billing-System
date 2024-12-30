@@ -145,8 +145,10 @@ def create_bill(request):
         })
     
 @login_required
-def allbill(request):
-    allbill=Billing.objects.filter(user=request.user)
-    return render(request,'billing/allbills.html',{
-        'allbill':allbill
+def all_data(request):
+    allbill = Billing.objects.filter(user=request.user)
+    allcustomer = Customer.objects.filter(user=request.user)
+    return render(request, 'billing/allbills.html', {
+        'allbill': allbill,
+        'allcustomer': allcustomer,
     })

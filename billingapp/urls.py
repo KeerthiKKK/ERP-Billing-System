@@ -9,6 +9,5 @@ urlpatterns = [
     path("",views.login_view,name='login'),
     path("registration/",views.register_view,name='registration'),
     path('createbill',views.create_bill,name='createbill'),
-    path("allbill/",views.allbill,name='allbill'),
-
+    path("all_data/",views.all_data,name='all_data'),
 ]
