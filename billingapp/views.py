@@ -17,10 +17,10 @@ def view_profile(request):
 @login_required
 def profile(request):
     try:
-        # Try to get the profile for the current user
+       
         profile = Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
-        # If no profile exists, handle it gracefully (e.g., redirect to a form to create one)
+       
         return render(request, 'billing/profile.html', {
             'error': 'No profile exists for the current user. Please create one.'
         })
@@ -94,3 +94,59 @@ def register_view(request):
             'form':form
         })
     
+def create_bill(request):
+    if request.method=='POST':
+        form1=BillingForm(request.POST)
+        form2=CustomerForm(request.POST)
+        
+        if form1.is_valid() and form2.is_valid():
+            new_id=form1.cleaned_data['bill_id']
+            new_date=form1.cleaned_data['bill_date']
+
+            new_customername=form2.cleaned_data['customer_name']
+            new_custaddress=form2.cleaned_data['customer_address']
+            new_custmobno=form2.cleaned_data['customer_mobileno']
+            new_custgst =form2.cleaned_data['customer_gst']
+
+            new_bill=Billing(
+                bill_id=new_id,
+                bill_date=new_date,
+                user=request.user
+            )
+
+            new_customer=Customer(
+                customer_name=new_customername,
+                customer_address=new_custaddress,
+                customer_mobileno=new_custmobno,
+                customer_gst=new_custgst,
+                user=request.user
+            )
+
+            new_bill.save()
+            new_customer.save()
+
+            return render(request,'billing/create_bill.html',{
+            'form1':BillingForm(),
+            'form2':CustomerForm(),
+            'success':True
+        })
+    
+    else:
+        form1=BillingForm()
+        billing = Billing.objects.filter(user=request.user)
+        form2=CustomerForm()
+        customer = Customer.objects.filter(user=request.user)
+        
+    return render(request,'billing/create_bill.html',{
+            'form1':form1,
+            'billing':billing,
+            'form2':form2,
+            'customer':customer,
+        })
+    
+@login_required
+def allbill(request):
+    allbill=Billing.objects.filter(user=request.user)
+    return render(request,'billing/allbills.html',{
+        'allbill':allbill
+    })

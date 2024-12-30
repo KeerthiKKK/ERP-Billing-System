@@ -6,3 +6,7 @@ admin.site.register(Billing)
 admin.site.register(Products)
 admin.site.register(Stock)
 admin.site.register(Profile)
+admin.site.register(Customer)
+
+
+#keert kkk kkk@gmail.com

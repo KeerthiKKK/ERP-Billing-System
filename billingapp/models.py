@@ -16,15 +16,27 @@ class Profile(models.Model):
     
     
 class Billing(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=False)
+
     bill_id = models.PositiveIntegerField()
-    bill_items=models.CharField(max_length=255)
-    bill_address=models.CharField(max_length=255)
-    bill_amount=models.FloatField()
     bill_date=models.DateField()
 
     def __str__(self):
         return f"BILL.NO:{self.bill_id}"
     
+class Customer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=False)
+    
+    customer_name=models.CharField(max_length=255)
+    customer_address=models.TextField()
+    customer_mobileno=models.CharField(max_length=255)
+    customer_gst=models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Customer_Name:{self.customer_name}"
+
+
+
 class Products(models.Model):
     product_id=models.PositiveIntegerField()
     product_category=models.CharField(max_length=255)

@@ -34,3 +34,21 @@ class RegistrationForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError("Passwords do not match")
         return cleaned_data
+
+class BillingForm(forms.ModelForm):
+    class Meta:
+        model=Billing
+        fields = ['bill_id','bill_date']
+        widgets={
+            'bill_date':forms.DateInput(attrs={
+                                'type':'date'
+
+            })
+        }
+        
+    
+
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model=Customer
+        fields=['customer_name','customer_address','customer_mobileno','customer_gst']
